@@ -1,4 +1,4 @@
-# Eventqueue  ![Travis CI Build Status](https://api.travis-ci.org/mngharbi/eventqueue.svg?branch=master) [![Coverage](https://codecov.io/gh/mngharbi/eventqueue/branch/master/graph/badge.svg)](https://codecov.io/gh/mngharbi/eventqueue) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/mngharbi/eventqueue/master/LICENSE)
+# Eventqueue  ![Travis CI Build Status](https://api.travis-ci.org/mngharbi/eventqueue.svg?branch=master) [![Go Report Card](https://goreportcard.com/badge/gojp/goreportcard)](https://goreportcard.com/report/mngharbi/eventqueue) [![Coverage](https://codecov.io/gh/mngharbi/eventqueue/branch/master/graph/badge.svg)](https://codecov.io/gh/mngharbi/eventqueue) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/mngharbi/eventqueue/master/LICENSE)
 
 ## Overview
 
