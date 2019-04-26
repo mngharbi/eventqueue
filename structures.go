@@ -1,12 +1,12 @@
 package eventqueue
 
 import (
-	"sync"
 	"errors"
+	"sync"
 )
 
 var (
-	eventqueueClosed error = errors.New("Event queue is closed")
+	eventqueueClosed    error = errors.New("Event queue is closed")
 	unknownSubscriberId error = errors.New("Unknown subscriber id")
 )
 
@@ -31,16 +31,16 @@ type EventQueue struct {
 
 	// Keep track of events
 	nextEventId int
-	events []*eventRecord
+	events      []*eventRecord
 
 	// Used to notify remover of first event being done
 	notificationQueue chan bool
 
-	lock     *sync.RWMutex
+	lock *sync.RWMutex
 }
 
 /*
-	Structure to keep track of an event 
+	Structure to keep track of an event
 */
 type eventRecord struct {
 	id int
@@ -53,7 +53,6 @@ type eventRecord struct {
 
 	payload Event
 }
-
 
 /*
 	Structure to keep track of a listener

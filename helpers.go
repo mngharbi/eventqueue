@@ -9,7 +9,7 @@ import (
 */
 
 // Used to notify a listener of n events
-func (listenerRec *listenerRecord) notifyNewEvents (eventsnb int) {
+func (listenerRec *listenerRecord) notifyNewEvents(eventsnb int) {
 	for i := 0; i < eventsnb; i++ {
 		listenerRec.notificationQueue <- true
 	}
@@ -18,7 +18,6 @@ func (listenerRec *listenerRecord) notifyNewEvents (eventsnb int) {
 func generateSubscriberId() string {
 	return xid.New().String()
 }
-
 
 /*
 	Pubsub helpers

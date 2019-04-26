@@ -9,16 +9,16 @@ import (
 */
 
 func New() (eq *EventQueue) {
-	// Make eventqueue structure 
+	// Make eventqueue structure
 	eq = &EventQueue{
-		listeners: make(map[string]*listenerRecord),
-		closing: false,
-		closingWaitGroup: &sync.WaitGroup{},
-		quitChannel: make(chan bool, 1),
-		nextEventId: 0,
-		events: []*eventRecord{},
+		listeners:         make(map[string]*listenerRecord),
+		closing:           false,
+		closingWaitGroup:  &sync.WaitGroup{},
+		quitChannel:       make(chan bool, 1),
+		nextEventId:       0,
+		events:            []*eventRecord{},
 		notificationQueue: make(chan bool),
-		lock: &sync.RWMutex{},
+		lock:              &sync.RWMutex{},
 	}
 
 	// Closing wait group waits only for remover to be done
@@ -45,9 +45,9 @@ func (eq *EventQueue) Publish(event Event) error {
 
 	// Make event record
 	eventRec := &eventRecord{
-		id: eq.nextEventId,
-		cond: sync.NewCond(eq.lock),
-		read: make(map[string]bool),
+		id:      eq.nextEventId,
+		cond:    sync.NewCond(eq.lock),
+		read:    make(map[string]bool),
 		payload: event,
 	}
 
@@ -69,7 +69,7 @@ func (eq *EventQueue) Publish(event Event) error {
 }
 
 /*
-	Adds listener 
+	Adds listener
 	Returns: listener id (used for unsubscribe), channel for receiving events
 */
 func (eq *EventQueue) Subscribe() (eventChannel chan Event, id string) {
@@ -79,10 +79,10 @@ func (eq *EventQueue) Subscribe() (eventChannel chan Event, id string) {
 
 	// Make listener record
 	listenerRec := &listenerRecord{
-		id: id,
-		closing: false,
-		quitChannel: make(chan bool, 1),
-		listenerChannel: eventChannel,
+		id:                id,
+		closing:           false,
+		quitChannel:       make(chan bool, 1),
+		listenerChannel:   eventChannel,
 		notificationQueue: make(chan bool),
 	}
 
@@ -153,15 +153,15 @@ func (eq *EventQueue) Wait() {
 	Drainer
 */
 
-func (eq *EventQueue) drainEvents (listenerRec *listenerRecord) {
+func (eq *EventQueue) drainEvents(listenerRec *listenerRecord) {
 	// Determine initial target event id
 	targetId := eq.getInitialTargetId()
 
 	// Wait to be notified of new events
-	mainloop:
+mainloop:
 	for {
 		select {
-		case <- listenerRec.notificationQueue:
+		case <-listenerRec.notificationQueue:
 			// Read target event
 			var eventRec *eventRecord
 			eq.lock.RLock()
@@ -175,7 +175,7 @@ func (eq *EventQueue) drainEvents (listenerRec *listenerRecord) {
 
 			eq.lock.Lock()
 
-			// Skip marking as read if listener was just removed 
+			// Skip marking as read if listener was just removed
 			if listenerRec.closing {
 				eq.lock.Unlock()
 				break mainloop
@@ -185,7 +185,7 @@ func (eq *EventQueue) drainEvents (listenerRec *listenerRecord) {
 			eventRec.read[listenerRec.id] = true
 
 			// If all listeners are done reading first event, notify remover through condition variable
-			if eq.events[0].id == targetId && 
+			if eq.events[0].id == targetId &&
 				len(eventRec.read) == len(eq.listeners) {
 				eventRec.cond.Signal()
 			}
@@ -200,11 +200,11 @@ func (eq *EventQueue) drainEvents (listenerRec *listenerRecord) {
 			eq.lock.Unlock()
 
 			targetId += 1
-		case <- listenerRec.quitChannel:
+		case <-listenerRec.quitChannel:
 			break mainloop
 		}
 	}
-	
+
 	// Once we're done, close subscriber's channel
 	close(listenerRec.listenerChannel)
 }
@@ -213,10 +213,10 @@ func (eq *EventQueue) drainEvents (listenerRec *listenerRecord) {
 	Remover
 */
 func (eq *EventQueue) removeEvents() {
-	mainloop:
+mainloop:
 	for {
 		select {
-		case <- eq.notificationQueue:
+		case <-eq.notificationQueue:
 			eq.lock.Lock()
 
 			eventRec := eq.events[0]
@@ -235,11 +235,10 @@ func (eq *EventQueue) removeEvents() {
 			}
 
 			eq.lock.Unlock()
-		case <- eq.quitChannel:
+		case <-eq.quitChannel:
 			break mainloop
 		}
 	}
-
 
 	// Remove references
 	eq.events = nil

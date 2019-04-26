@@ -1,8 +1,8 @@
 package eventqueue
 
 import (
-	"testing"
 	"sync"
+	"testing"
 )
 
 /*
@@ -39,7 +39,7 @@ func TestOneSubscriber(t *testing.T) {
 	// Close event queue
 	go eq.Done()
 
-	// Read until channel closes 
+	// Read until channel closes
 	sum := 0
 	for nb := range channel {
 		sum += nb.(int)
@@ -48,8 +48,8 @@ func TestOneSubscriber(t *testing.T) {
 	// Wait for all events to be read (should be done because we waited for channel)
 	eq.Wait()
 
-	// Expect sum 
-	expectedSum := nbPublishers*(n*(n+1))/2
+	// Expect sum
+	expectedSum := nbPublishers * (n * (n + 1)) / 2
 	if sum != expectedSum {
 		t.Errorf("Sum with one subscriber does not match expected sum. sum=%v, expected=%v", sum, expectedSum)
 	}
@@ -124,13 +124,14 @@ func TestUnsubscribeMultiple(t *testing.T) {
 	}
 	eq.lock.Unlock()
 
-	// Make sure second channel closes before we close event queue 
-	for _ = range channel2 {}
+	// Make sure second channel closes before we close event queue
+	for range channel2 {
+	}
 
 	// Close event queue
 	go eq.Done()
 
-	// Read until channel closes 
+	// Read until channel closes
 	sum := 0
 	for nb := range channel1 {
 		sum += nb.(int)
@@ -140,7 +141,7 @@ func TestUnsubscribeMultiple(t *testing.T) {
 	eq.Wait()
 
 	// Make sure first channel still reads everything
-	expectedSum := nbPublishers*(n*(n+1))/2
+	expectedSum := nbPublishers * (n * (n + 1)) / 2
 	if sum != expectedSum {
 		t.Errorf("Sum with one subscriber does not match expected sum. sum=%v, expected=%v", sum, expectedSum)
 	}
@@ -174,11 +175,10 @@ func TestPublishClosed(t *testing.T) {
 func TestUnknownUnsubscribe(t *testing.T) {
 	eq := New()
 
-	if err := eq.Unsubscribe("ID"); err != unknownSubscriberId { 
+	if err := eq.Unsubscribe("ID"); err != unknownSubscriberId {
 		t.Error("Unsubscribing with unknown id should fail")
 	}
 
 	eq.Done()
 	eq.Wait()
 }
-
