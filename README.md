@@ -1,8 +1,8 @@
-# Eventqueue  ![Travis CI Build Status](https://api.travis-ci.org/mngharbi/eventqueue.svg?branch=master) [![Go Report Card](https://goreportcard.com/badge/gojp/goreportcard)](https://goreportcard.com/report/mngharbi/eventqueue) [![Coverage](https://codecov.io/gh/mngharbi/eventqueue/branch/master/graph/badge.svg)](https://codecov.io/gh/mngharbi/eventqueue) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/mngharbi/eventqueue/master/LICENSE)
+# EventQueue  ![Travis CI Build Status](https://api.travis-ci.org/mngharbi/eventqueue.svg?branch=master) [![Go Report Card](https://goreportcard.com/badge/gojp/goreportcard)](https://goreportcard.com/report/mngharbi/eventqueue) [![Coverage](https://codecov.io/gh/mngharbi/eventqueue/branch/master/graph/badge.svg)](https://codecov.io/gh/mngharbi/eventqueue) [![license](http://img.shields.io/badge/license-MIT-red.svg?style=flat)](https://raw.githubusercontent.com/mngharbi/eventqueue/master/LICENSE)
 
 ## Overview
 
-Eventqueue implements a fast goroutine safe pubsub for one topic that maintains publish order and is non-blocking on publish.
+EventQueue implements a fast goroutine safe pubsub for one topic that maintains publish order while being non-blocking on publish.
 
 It offers 5 simple API calls on an eventqueue object:
 - Publish
