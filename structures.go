@@ -29,6 +29,9 @@ type EventQueue struct {
 	// Used to unblock remover
 	quitChannel chan bool
 
+	// Used to notify waiters on empty queue
+	emptyCond *sync.Cond
+
 	// Keep track of events
 	nextEventId int
 	events      []*eventRecord

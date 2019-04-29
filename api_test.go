@@ -182,3 +182,31 @@ func TestUnknownUnsubscribe(t *testing.T) {
 	eq.Done()
 	eq.Wait()
 }
+
+func TestWaitUntilEmpty(t *testing.T) {
+	eq := New()
+
+	// Subscribe
+	channel, _ := eq.Subscribe()
+
+	// Make sure wait until empty returns before publishing
+	eq.WaitUntilEmpty()
+	eq.Publish(0)
+
+	// Pass through empty events waiter
+	emptyNotification := make(chan bool)
+	go func() {
+		eq.WaitUntilEmpty()
+		emptyNotification <- true
+	}()
+
+	// Read value then wait until empty
+	select {
+	case <-emptyNotification:
+		t.Error("WaitUntilEmpty should not return before events are drained.")
+	default:
+		break
+	}
+	<-channel
+	<-emptyNotification
+}

@@ -21,6 +21,9 @@ func New() (eq *EventQueue) {
 		lock:              &sync.RWMutex{},
 	}
 
+	// Initialize empty waiters cond
+	eq.emptyCond = sync.NewCond(eq.lock)
+
 	// Closing wait group waits only for remover to be done
 	eq.closingWaitGroup.Add(1)
 
@@ -150,6 +153,20 @@ func (eq *EventQueue) Wait() {
 }
 
 /*
+	Wait until all events are read
+*/
+func (eq *EventQueue) WaitUntilEmpty() {
+	eq.lock.Lock()
+
+	// Try to win the race against new events
+	for len(eq.events) != 0 {
+		eq.emptyCond.Wait()
+	}
+
+	eq.lock.Unlock()
+}
+
+/*
 	Drainer
 */
 
@@ -232,6 +249,11 @@ mainloop:
 			if eq.closing && len(eq.events) == 0 {
 				eq.lock.Unlock()
 				break mainloop
+			}
+
+			// Notify waiters on empty status
+			if len(eq.events) == 0 {
+				eq.emptyCond.Broadcast()
 			}
 
 			eq.lock.Unlock()
