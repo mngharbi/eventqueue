@@ -8,5 +8,6 @@ It offers 5 simple API calls on an eventqueue object:
 - Publish
 - Subscribe
 - Unsubscribe
-- Done (closes the queue)
-- Wait (blocks until the queue is closed and all subscribers are done reading).
+- Done: closes the queue
+- Wait: blocks until the queue is closed and all subscribers are done reading.
+- WaitUntilEmpty: blocks until the queue is empty
